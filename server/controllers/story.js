@@ -3,23 +3,25 @@ import { Story } from "../models/story.js";
 // Create or Update Story
 export const addStory = async (req, res) => {
   const { story, user } = req.body;
+  // console.log("Received story data:", story, "for user:", user._id || user);
 
   try {
-    // Check if story already exists for this user
-    const existingStory = await Story.findOne({ "user._id": user._id });
+    const userId = user._id || user;
+
+    // Find existing story by user ID (not embedded object)
+    const existingStory = await Story.findOne({ user: userId });
 
     if (existingStory) {
-      // Append new stories to existing array
       existingStory.story.push(...story);
-      existingStory.createdAt = new Date().toISOString(); // optional: update timestamp
+      existingStory.createdAt = new Date().toISOString();
       await existingStory.save();
       return res.status(200).json({ message: "Story updated successfully" });
     }
 
-    // Create new story entry
+    // Save new story
     const saveData = new Story({
       story,
-      user,
+      user: userId,
       createdAt: new Date().toISOString(),
     });
 

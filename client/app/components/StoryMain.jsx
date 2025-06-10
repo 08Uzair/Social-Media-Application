@@ -11,10 +11,11 @@ const StoryFeature = () => {
 
   // ✅ Correctly access the array from Redux state
   const stories = useSelector((state) => state.story.story.stories);
-console.log(stories, "stories from redux");
+  console.log(stories, "stories from redux");
   const [usersStories, setUsersStories] = useState([]);
   const [viewingIndex, setViewingIndex] = useState(null);
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   // Fetch stories on mount
   useEffect(() => {
@@ -45,9 +46,13 @@ console.log(stories, "stories from redux");
 
   // Upload story
   const handleUpload = async (e) => {
+    setLoading(true);
     const files = Array.from(e.target.files);
     const urls = await uploadToCloudArray(files);
-    if (urls.length === 0) return;
+    if (urls.length === 0) {
+      setLoading(false);
+      return;
+    }
 
     const newStory = {
       user: profile?.result?._id,
@@ -76,6 +81,7 @@ console.log(stories, "stories from redux");
         ];
       }
     });
+    setLoading(false);
   };
 
   const handleStoryClick = (index) => {
@@ -122,10 +128,15 @@ console.log(stories, "stories from redux");
           className="hidden"
           id="upload"
           onChange={handleUpload}
+          disabled={loading}
         />
         <div className="flex flex-col items-center">
           <div className="w-16 h-16 bg-blue-500 rounded-full text-white text-2xl flex items-center justify-center">
-            +
+            {loading ? (
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              "+"
+            )}
           </div>
           <p>Post Story</p>
         </div>
@@ -170,25 +181,29 @@ console.log(stories, "stories from redux");
                 ></div>
               </div>
             ))}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setViewingIndex(null);
+              }}
+              className="mt-4 px-4 py-2  text-white rounded-full bg-['#00000085'] text-2xl cursor-pointer"
+              style={{
+                position: "absolute",
+                top: "3rem",
+                right: 0,
+                zIndex: 10,
+              }}
+            >
+              x
+            </button>
           </div>
 
           {/* Story image */}
           <img
             src={usersStories[viewingIndex].stories[currentIdx]}
             alt={`story-${currentIdx}`}
-            className="w-80 h-96 object-cover rounded-lg shadow-lg"
+            className="w-90 h-[70%] object-cover rounded-lg shadow-lg"
           />
-
-          {/* Close button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setViewingIndex(null);
-            }}
-            className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-          >
-            Close
-          </button>
         </div>
       )}
     </div>

@@ -6,7 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useAuthenticated from "@/hooks/useAuthenticated";
-
+import avatar from "../../public/assets/dummy.png";
+import cover from "../../public/assets/coverBg.jpg";
 const LeftSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [localData, setLocalData] = useState(null);
@@ -50,15 +51,13 @@ const LeftSidebar = () => {
                 className="relative h-24 bg-cover bg-center"
                 style={{
                   backgroundImage: `url(${
-                    localData?.result?.coverImage || "/default-cover.jpg"
+                    localData?.result?.coverImage || cover
                   })`,
                 }}
               >
                 <div className="absolute bottom-[-30px] left-1/2 transform -translate-x-1/2">
                   <Image
-                    src={
-                      localData?.result?.profileImage || "/default-avatar.jpg"
-                    }
+                    src={localData?.result?.profileImage || avatar}
                     alt="Avatar"
                     className="rounded-full border-4 border-white shadow-lg"
                     width={80}

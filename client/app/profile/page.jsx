@@ -13,6 +13,7 @@ import {
   updateUser,
 } from "../redux/actions/auth";
 import { createPost, getUserPost } from "../redux/actions/post";
+import { toast } from "react-toastify";
 
 const ProfileCard = () => {
   const [activeTab, setActiveTab] = useState("Posts");
@@ -62,9 +63,11 @@ const ProfileCard = () => {
       content,
     };
     dispatch(createPost(data));
+    toast.success("Post created successfully!");
     setImage("");
     setTitle("");
     setContent("");
+    dispatch(getUserPost(localData?.result?._id));
     setModelOpen(false);
   };
 
@@ -73,6 +76,7 @@ const ProfileCard = () => {
     try {
       await dispatch(updateUser(localData?.result?._id, profileData));
       mergeAndUpdateLocalUserData(profileData);
+      toast.success("Profile updated successfully!");
       setIsPopupOpen(false);
     } catch (error) {
       console.error("Error updating profile", error);
