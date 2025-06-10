@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-// import dotenv from "dotenv";
-// dotenv.config();
 
-const URI ='mongodb+srv://social:social@cluster0.gy3sw7d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const URI =
+  "mongodb+srv://social:social@cluster0.gy3sw7d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 export const dataBaseConnection = async () => {
   try {
