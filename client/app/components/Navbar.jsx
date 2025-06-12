@@ -4,14 +4,15 @@ import logo from "../../public/assets/logo.png";
 import search from "../../public/assets/search.png";
 import avatar from "../../public/assets/dummy.png";
 import feedback from "../../public/assets/feedback.png";
-import setting from "../../public/assets/setting.png";
-import help from "../../public/assets/help.png";
+import friends from "../../public/assets/friends.png";
+import marketplace from "../../public/assets/marketplace.png";
 import logout from "../../public/assets/logout.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../redux/actions/auth";
+// import bookmark from "../redux/reducers/bookmark";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [localData, setLocalData] = useState("");
@@ -47,6 +48,9 @@ const Navbar = () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+  const handleRoute = (path) => {
+    router.push(`/${path}`);
+  };
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logoutUser());
@@ -99,7 +103,7 @@ const Navbar = () => {
                   {" "}
                   {localData?.result?.firstName} {localData?.result?.surname}
                 </p>
-                <span className="text-blue-500 cursor-pointer">
+                <span className="text-blue-500 cursor-pointer hover:underline ">
                   See Your Profile
                 </span>
               </div>
@@ -115,35 +119,48 @@ const Navbar = () => {
             </div>
             <hr />
 
-            <div className="seeting-links">
-              <Image src={setting} className="settings-icon" alt="Settings" />
-              <a href="#">Setting & Privacy</a>
+            <div
+              onClick={() => handleRoute("friends")}
+              className="seeting-links"
+            >
+              <Image
+                src={friends}
+                className="settings-icon grayscale"
+                alt="Settings"
+              />
+              <span>Friends</span>
             </div>
-            <div className="seeting-links">
-              <Image src={help} className="settings-icon" alt="Help" />
-              <a href="#">Help & Support</a>
+            <div
+              onClick={() => handleRoute("bookmark")}
+              className="seeting-links"
+            >
+              <Image
+                src={marketplace}
+                className="settings-icon grayscale"
+                alt="Help"
+              />
+              <span>BookMarks</span>
             </div>
             {!isAuthenticated ? (
               <>
-                <Link href={"/auth"}>
-                  <div className="seeting-links cursor-pointer">
-                    <Image
-                      src={logout}
-                      className="settings-icon"
-                      alt="Logout"
-                    />
-                    <span className="text-gray-600">SignIn</span>
-                  </div>
-                </Link>
+                <div
+                  onClick={() => handleRoute("auth")}
+                  className="seeting-links "
+                >
+                  <Image
+                    src={logout}
+                    className="settings-icon grayscale"
+                    alt="Logout"
+                  />
+                  <span className="text-gray-600">SignIn</span>
+                </div>
               </>
             ) : (
               <>
                 <div className="seeting-links cursor-pointer">
-                  <Image src={logout} className="settings-icon" alt="Logout" />
+                  <Image src={logout} className="settings-icon1" alt="Logout" />
 
-                  <span className="settings-icon" onClick={handleLogout}>
-                    Logout
-                  </span>
+                  <span onClick={handleLogout}>Logout</span>
                 </div>
               </>
             )}

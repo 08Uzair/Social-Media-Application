@@ -877,12 +877,21 @@ nav {
   display: flex;
   align-items: center;
   margin: 15px 0px;
+  cursor: pointer;
+
+}
+.seeting-links:hover{
+  color: #1876f2;
+ 
 }
 
 .seeting-links .settings-icon {
-  width: 38px;
+  width: 18px;
   margin-right: 10px;
-  border-radius: 50%;
+}
+.settings-icon1 {
+  width: 21px;
+  margin-right: 10px;
 }
 
 .seeting-links a {
