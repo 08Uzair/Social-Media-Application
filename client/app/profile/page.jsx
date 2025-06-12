@@ -49,7 +49,7 @@ const ProfileCard = () => {
 
     const newStory = {
       user: localData.result._id,
-      story: urls,
+      media: urls,
     };
 
     await dispatch(addStory(newStory));
