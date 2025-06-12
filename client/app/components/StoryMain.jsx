@@ -102,7 +102,7 @@ const StoryFeature = () => {
       } else {
         setViewingIndex(null);
       }
-    }, 30000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [currentIdx, viewingIndex, usersStories]);
