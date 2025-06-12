@@ -25,6 +25,7 @@ const auth = (state = { authData: null }, action) => {
       };
 
     case LOGOUT:
+      localStorage.clear();
       Cookies.remove("token");
       return { ...state, authData: null, loading: false, errors: null };
 

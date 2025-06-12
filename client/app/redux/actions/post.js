@@ -40,6 +40,7 @@ export const createPost = (post) => async (dispatch) => {
 export const getPostById = (id) => async (dispatch) => {
   try {
     const { data } = await api.fetchPostByID(id);
+    // console.log(data, "This is Single Post Data form Action");
     dispatch({ type: FETCH_POST_ID, payload: data });
   } catch (error) {
     console.log(error);

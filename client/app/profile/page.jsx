@@ -14,12 +14,15 @@ import {
 } from "../redux/actions/auth";
 import { createPost, getUserPost } from "../redux/actions/post";
 import { toast } from "react-toastify";
+import { addStory } from "../redux/actions/story";
+import { uploadToCloudArray } from "../utility/upoadToCloudArray";
 
 const ProfileCard = () => {
   const [activeTab, setActiveTab] = useState("Posts");
   const [localData, setLocalData] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isModelOpen, setModelOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -35,7 +38,24 @@ const ProfileCard = () => {
     const storedProfile = JSON.parse(localStorage.getItem("profile"));
     setLocalData(storedProfile);
   }, []);
+  const handleUpload = async (e) => {
+    setLoading(true);
+    const files = Array.from(e.target.files);
+    const urls = await uploadToCloudArray(files);
+    if (urls.length === 0) {
+      setLoading(false);
+      return;
+    }
 
+    const newStory = {
+      user: localData.result._id,
+      story: urls,
+    };
+
+    await dispatch(addStory(newStory));
+
+    setLoading(false);
+  };
   useEffect(() => {
     if (localData?.result?._id) {
       dispatch(getUserPost(localData.result._id));
@@ -96,16 +116,18 @@ const ProfileCard = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden mt-10">
+    <div className="w-3xl h-[100vh] mx-auto bg-white shadow-lg rounded-xl overflow-hidden ">
       {/* Create Post Modal */}
       {isModelOpen && (
-        <div className="w-full h-[100vh] backdrop-blur-md z-50 flex items-center justify-center flex-col fixed right-6">
+        <div className="w-full h-full backdrop-blur-md z-50 flex items-center justify-center flex-col fixed right-6 top-2.5">
           <div className="max-w-lg mx-auto bg-gray-100 p-6 rounded-2xl shadow-md">
             <h2 className="text-xl font-semibold mb-4">Create Post</h2>
             <div className="mb-4">
               {image && (
-                <img
+                <Image
                   src={image}
+                  width={500}
+                  height={400}
                   alt="Preview"
                   className="mb-2 w-full rounded-md"
                 />
@@ -195,9 +217,29 @@ const ProfileCard = () => {
 
         {/* Buttons */}
         <div className="mt-6 flex gap-4">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer">
+          <label htmlFor="upload" className="cursor-pointer">
+            <input
+              type="file"
+              multiple
+              className="hidden"
+              id="upload"
+              onChange={handleUpload}
+              disabled={loading}
+            />
+            <div className="flex flex-col items-center">
+              <div className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer">
+                {loading ? (
+                  <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  " Add to story"
+                )}
+              </div>
+              {/* <p>Post Story</p> */}
+            </div>
+          </label>
+          {/* <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer">
             Add to story
-          </button>
+          </button> */}
           <button
             onClick={() => setIsPopupOpen(true)}
             className="bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold cursor-pointer"
@@ -241,20 +283,18 @@ const ProfileCard = () => {
               </div>
               {posts?.map((item, index) => {
                 return (
-                  <>
-                    <div
-                      key={index}
-                      className=" w-[238px] h-[20vh] overflow-hidden content-center bg-center bg-no-repeat bg-cover border border-gray-300"
-                    >
-                      <Image
-                        width={700}
-                        height={800}
-                        src={image || item?.image}
-                        alt="photo"
-                        className=" w-full"
-                      />
-                    </div>
-                  </>
+                  <div
+                    key={index}
+                    className=" w-[238px] h-[20vh] overflow-hidden content-center bg-center bg-no-repeat bg-cover border border-gray-300"
+                  >
+                    <Image
+                      width={700}
+                      height={800}
+                      src={image || item?.image}
+                      alt="photo"
+                      className=" w-full"
+                    />
+                  </div>
                 );
               })}
             </div>

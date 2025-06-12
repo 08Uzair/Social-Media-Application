@@ -1,16 +1,37 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { signin, signUp } from "../redux/actions/auth";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const FacebookAuth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [isButton, setIsButton] = useState(false);
+  const [btnStage, setBtnStage] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const router = useRouter();
-  // State for Sign Up Data
+  // Button text stages
+  const btnStages = ["Logging in...", "Just 5 sec", "You're almost there"];
+
+  useEffect(() => {
+    let timer;
+    if (isSubmitting) {
+      timer = setInterval(() => {
+        setBtnStage((prev) => (prev + 1) % btnStages.length);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isSubmitting]);
+
+  // Password validation
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{6,}$/;
+    return regex.test(password);
+  };
+
+  // SignUp State
   const [signUpData, setSignUpData] = useState({
     firstName: "",
     surname: "",
@@ -21,44 +42,85 @@ const FacebookAuth = () => {
     year: "",
     gender: "",
   });
-  console.log(signUpData, "SIGNUP DATA");
 
-  const handleSignUp =async (e) => {
-    setIsButton(true);
-    e.preventDefault();
-    if (signUpData) {
-      dispatch(signUp(signUpData));
-    }
-   await router.push("/");
-    toast.success("Registered Successfully");
-  };
-
-  // State for Sign In Data
+  // SignIn State
   const [signInData, setSignInData] = useState({
     email: "",
     password: "",
   });
-  const handleSignIn =async (e) => {
-    setIsButton(true);
-    e.preventDefault();
-    if (signInData) {
-      dispatch(signin(signInData));
+
+  // Validation check
+  const validateSignUpFields = () => {
+    const newErrors = {};
+    Object.entries(signUpData).forEach(([key, value]) => {
+      if (!value) newErrors[key] = `${key} is required`;
+    });
+
+    if (signUpData.password && !validatePassword(signUpData.password)) {
+      newErrors.password =
+        "Password must be > 5 chars and include A-Z, symbol, and number";
     }
-    toast.success("Login Sucessfully");
-   await router.push("/");
-  
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  // Handle Sign Up Change
+  const validateSignInFields = () => {
+    const newErrors = {};
+    Object.entries(signInData).forEach(([key, value]) => {
+      if (!value) newErrors[key] = `${key} is required`;
+    });
+
+    // if (signInData.password && !validatePassword(signInData.password)) {
+    //   newErrors.password =
+    //     "Password must be > 5 chars and include A-Z, symbol, and number";
+    // }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle Form Submit
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    if (!validateSignUpFields()) return;
+
+    setIsSubmitting(true);
+    await dispatch(signUp(signUpData));
+    toast.success("Registered Successfully");
+    router.push("/");
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    if (!validateSignInFields()) return;
+
+    setIsSubmitting(true);
+    await dispatch(signin(signInData));
+    toast.success("Login Successfully");
+    router.push("/");
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
+
   const handleSignUpChange = (e) => {
     const { name, value } = e.target;
     setSignUpData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // Handle Sign In Change
   const handleSignInChange = (e) => {
     const { name, value } = e.target;
     setSignInData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   return (
@@ -71,12 +133,11 @@ const FacebookAuth = () => {
         </p>
       </div>
 
-      {/* Right Section (Conditional Rendering) */}
+      {/* Right Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg w-full md:w-96">
         {isSignUp ? (
-          // Sign Up Form
           <>
-            <h2 className="text-xl font-semibold text-center cursor-pointer">
+            <h2 className="text-xl font-semibold text-center">
               Create a new account
             </h2>
             <p className="text-center text-gray-500 mb-4">
@@ -84,22 +145,32 @@ const FacebookAuth = () => {
             </p>
 
             <div className="flex space-x-2">
-              <input
-                type="text"
-                name="firstName"
-                placeholder="First name"
-                className="w-1/2 p-2 border rounded-md"
-                value={signUpData.firstName}
-                onChange={handleSignUpChange}
-              />
-              <input
-                type="text"
-                name="surname"
-                placeholder="Surname"
-                className="w-1/2 p-2 border rounded-md"
-                value={signUpData.surname}
-                onChange={handleSignUpChange}
-              />
+              <div className="w-1/2">
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="First name"
+                  className="w-full p-2 border rounded-md"
+                  value={signUpData.firstName}
+                  onChange={handleSignUpChange}
+                />
+                {errors.firstName && (
+                  <p className="text-red-500 text-xs">{errors.firstName}</p>
+                )}
+              </div>
+              <div className="w-1/2">
+                <input
+                  type="text"
+                  name="surname"
+                  placeholder="Surname"
+                  className="w-full p-2 border rounded-md"
+                  value={signUpData.surname}
+                  onChange={handleSignUpChange}
+                />
+                {errors.surname && (
+                  <p className="text-red-500 text-xs">{errors.surname}</p>
+                )}
+              </div>
             </div>
 
             <input
@@ -110,6 +181,10 @@ const FacebookAuth = () => {
               value={signUpData.email}
               onChange={handleSignUpChange}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs">{errors.email}</p>
+            )}
+
             <input
               type="password"
               name="password"
@@ -118,112 +193,97 @@ const FacebookAuth = () => {
               value={signUpData.password}
               onChange={handleSignUpChange}
             />
+            {errors.password && (
+              <p className="text-red-500 text-xs">{errors.password}</p>
+            )}
 
-            {/* Date of Birth */}
+            {/* DOB */}
             <div className="mt-2 flex space-x-2">
-              <select
-                name="day"
-                className="w-1/3 p-2 border rounded-md"
-                value={signUpData.day}
-                onChange={handleSignUpChange}
-              >
-                <option>Day</option>
-                {[...Array(31)].map((_, i) => (
-                  <option key={i} value={i + 1}>
-                    {i + 1}
+              {["day", "month", "year"].map((field, i) => (
+                <select
+                  key={field}
+                  name={field}
+                  className="w-1/3 p-2 border rounded-md"
+                  value={signUpData[field]}
+                  onChange={handleSignUpChange}
+                >
+                  <option>
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
                   </option>
-                ))}
-              </select>
-              <select
-                name="month"
-                className="w-1/3 p-2 border rounded-md"
-                value={signUpData.month}
-                onChange={handleSignUpChange}
-              >
-                <option>Month</option>
-                {[
-                  "Jan",
-                  "Feb",
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec",
-                ].map((m, i) => (
-                  <option key={i} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="year"
-                className="w-1/3 p-2 border rounded-md"
-                value={signUpData.year}
-                onChange={handleSignUpChange}
-              >
-                <option>Year</option>
-                {[...Array(100)].map((_, i) => (
-                  <option key={i} value={2025 - i}>
-                    {2025 - i}
-                  </option>
-                ))}
-              </select>
+                  {field === "day" &&
+                    [...Array(31)].map((_, i) => (
+                      <option key={i} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
+                  {field === "month" &&
+                    [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ].map((m, i) => (
+                      <option key={i} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  {field === "year" &&
+                    [...Array(100)].map((_, i) => (
+                      <option key={i} value={2025 - i}>
+                        {2025 - i}
+                      </option>
+                    ))}
+                </select>
+              ))}
             </div>
 
-            {/* Gender Selection */}
+            {/* Gender */}
             <div className="mt-2 flex space-x-4">
-              <label className="flex items-center space-x-1">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Female"
-                  checked={signUpData.gender === "Female"}
-                  onChange={handleSignUpChange}
-                />{" "}
-                <span>Female</span>
-              </label>
-              <label className="flex items-center space-x-1">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Male"
-                  checked={signUpData.gender === "Male"}
-                  onChange={handleSignUpChange}
-                />{" "}
-                <span>Male</span>
-              </label>
-              <label className="flex items-center space-x-1">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="Custom"
-                  checked={signUpData.gender === "Custom"}
-                  onChange={handleSignUpChange}
-                />{" "}
-                <span>Custom</span>
-              </label>
+              {["Female", "Male", "Custom"].map((g) => (
+                <label key={g} className="flex items-center space-x-1">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value={g}
+                    checked={signUpData.gender === g}
+                    onChange={handleSignUpChange}
+                  />
+                  <span>{g}</span>
+                </label>
+              ))}
             </div>
+            {errors.gender && (
+              <p className="text-red-500 text-xs">{errors.gender}</p>
+            )}
 
             <button
               onClick={handleSignUp}
-              className="w-full bg-green-500 text-white p-3 rounded-md mt-4 hover:bg-green-600 cursor-pointer"
+              className="w-full bg-green-500 text-white p-3 rounded-md mt-4 hover:bg-green-600"
+              disabled={isSubmitting}
             >
-              {isButton ? "Registering..." : " Sign Up"}
+              {isSubmitting ? btnStages[btnStage] : "Sign Up"}
             </button>
+
             <p
               className="text-center text-blue-500 mt-3 cursor-pointer hover:underline"
-              onClick={() => setIsSignUp(false)}
+              onClick={() => {
+                setIsSignUp(false);
+                setErrors({});
+                setIsSubmitting(false);
+              }}
             >
               Already have an account?
             </p>
           </>
         ) : (
-          // Login Form
           <>
             <input
               type="text"
@@ -233,6 +293,10 @@ const FacebookAuth = () => {
               value={signInData.email}
               onChange={handleSignInChange}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs">{errors.email}</p>
+            )}
+
             <input
               type="password"
               name="password"
@@ -241,20 +305,29 @@ const FacebookAuth = () => {
               value={signInData.password}
               onChange={handleSignInChange}
             />
+            {/* {errors.password && (
+              <p className="text-red-500 text-xs">{errors.password}</p>
+            )} */}
 
             <button
               onClick={handleSignIn}
-              className="w-full bg-blue-600 text-white p-3 rounded-md mt-4 hover:bg-blue-700 cursor-pointer"
+              className="w-full bg-blue-600 text-white p-3 rounded-md mt-4 hover:bg-blue-700"
+              disabled={isSubmitting}
             >
-              {isButton ? "Loging in...." : "  Log in"}
+              {isSubmitting ? btnStages[btnStage] : "Log in"}
             </button>
+
             <p className="text-center text-blue-500 mt-3 cursor-pointer hover:underline">
               Forgotten password?
             </p>
             <hr className="my-4" />
             <button
-              className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600 cursor-pointer"
-              onClick={() => setIsSignUp(true)}
+              className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600"
+              onClick={() => {
+                setIsSignUp(true);
+                setErrors({});
+                setIsSubmitting(false);
+              }}
             >
               Create new account
             </button>

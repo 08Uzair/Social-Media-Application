@@ -7,6 +7,8 @@ import { thunk } from "redux-thunk";
 import rootReducer from "./redux/reducers";
 import { createStore, applyMiddleware, compose } from "redux";
 import { ToastContainer } from "react-toastify";
+import LeftSidebar from "./components/LeftSidebar";
+import RightSidebar from "./components/RightSidebar";
 const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
 export default function RootLayout({ children }) {
   return (
@@ -15,7 +17,11 @@ export default function RootLayout({ children }) {
         <Provider store={store}>
           <ToastContainer />
           <Navbar />
-          {children}
+          <div className="flex justify-between px-5 mt-4">
+            <LeftSidebar />
+            {children}
+            <RightSidebar />
+          </div>
           <Footer />
         </Provider>
         {/* <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script> */}

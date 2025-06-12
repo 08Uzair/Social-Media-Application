@@ -10,10 +10,13 @@ import logout from "../../public/assets/logout.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../redux/actions/auth";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [localData, setLocalData] = useState("");
   const router = useRouter();
+  const dispatch = useDispatch();
   // Toggle settings menu
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -46,9 +49,8 @@ const Navbar = () => {
   }, []);
   const handleLogout = (e) => {
     e.preventDefault();
-
-    localStorage.clear();
-    router.push("/auth");
+    dispatch(logoutUser());
+    // router.push("/auth");
     window.location.reload();
   };
   const handleProfile = (e) => {

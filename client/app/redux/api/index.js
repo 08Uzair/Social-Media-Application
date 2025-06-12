@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
+  // baseURL: "https://social-media-application-3alv.onrender.com/api/v1",
   baseURL: "http://localhost:8200/api/v1",
 });
 

@@ -1,6 +1,6 @@
 import expresss from "express";
 import {
-  addStory,
+  addUserStory,
   deleteStory,
   getStory,
   getStoryById,
@@ -8,7 +8,7 @@ import {
 
 export const storyRouter = expresss.Router();
 
-storyRouter.post("/", addStory);
+storyRouter.post("/", addUserStory);
 storyRouter.get("/", getStory);
 storyRouter.get("/:id", getStoryById);
 storyRouter.delete("/:id", deleteStory);

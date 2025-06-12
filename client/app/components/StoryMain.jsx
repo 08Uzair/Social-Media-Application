@@ -4,14 +4,14 @@ import { uploadToCloudArray } from "../utility/upoadToCloudArray";
 import { useDispatch, useSelector } from "react-redux";
 import { addStory, getStory } from "../redux/actions/story";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import FormattedDate from "../utility/formattedDate";
+import { getRelativeTime } from "../utility/dateFormat";
 
 const StoryFeature = () => {
   const dispatch = useDispatch();
   const [profile] = useLocalStorage("profile", null);
-
-  // ✅ Correctly access the array from Redux state
   const stories = useSelector((state) => state.story.story.stories);
-  console.log(stories, "stories from redux");
+
   const [usersStories, setUsersStories] = useState([]);
   const [viewingIndex, setViewingIndex] = useState(null);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -22,20 +22,22 @@ const StoryFeature = () => {
     dispatch(getStory());
   }, [dispatch]);
 
-  // Group stories by user
+  // Group and flatten stories by user
   useEffect(() => {
     if (!Array.isArray(stories) || stories.length === 0) return;
 
     const grouped = stories.reduce((acc, item) => {
+      const mediaList = item.story.flatMap((s) => s.media); // Flatten all media
+
       const existing = acc.find((u) => u.userId === item.user._id);
       if (existing) {
-        existing.stories.push(...item.story);
+        existing.stories.push(...mediaList);
       } else {
         acc.push({
           userId: item.user._id,
           userName: `${item.user.firstName} ${item.user.surname}`,
           avatar: item.user.profileImage,
-          stories: [...item.story],
+          stories: mediaList,
         });
       }
       return acc;
@@ -44,7 +46,7 @@ const StoryFeature = () => {
     setUsersStories(grouped);
   }, [stories]);
 
-  // Upload story
+  // Upload and update local state
   const handleUpload = async (e) => {
     setLoading(true);
     const files = Array.from(e.target.files);
@@ -56,7 +58,7 @@ const StoryFeature = () => {
 
     const newStory = {
       user: profile?.result?._id,
-      story: urls,
+      media: urls,
     };
 
     await dispatch(addStory(newStory));
@@ -89,7 +91,7 @@ const StoryFeature = () => {
     setCurrentIdx(0);
   };
 
-  // Auto-play story
+  // Auto-play
   useEffect(() => {
     if (viewingIndex === null) return;
 
@@ -100,7 +102,7 @@ const StoryFeature = () => {
       } else {
         setViewingIndex(null);
       }
-    }, 3000);
+    }, 30000);
 
     return () => clearTimeout(timer);
   }, [currentIdx, viewingIndex, usersStories]);
@@ -142,7 +144,7 @@ const StoryFeature = () => {
         </div>
       </label>
 
-      {/* Avatars */}
+      {/* Story Avatars */}
       <div className="flex gap-4 overflow-x-auto">
         {usersStories.map((user, idx) => (
           <div
@@ -166,8 +168,8 @@ const StoryFeature = () => {
           className="fixed inset-0 bg-black/90 flex flex-col items-center justify-center z-50"
           onClick={handleViewerClick}
         >
-          {/* Progress bars */}
-          <div className="flex w-full max-w-md gap-1 p-4">
+          {/* Progress Bars */}
+          <div className="flex relative w-full max-w-md gap-1 p-4">
             {usersStories[viewingIndex]?.stories.map((_, i) => (
               <div key={i} className="relative flex-1 h-1 bg-white/30 rounded">
                 <div
@@ -181,29 +183,55 @@ const StoryFeature = () => {
                 ></div>
               </div>
             ))}
+            <div className="absolute left-4 bg-black/60 text-white text-xs px-2 py-1 rounded top-[2rem]">
+              {(() => {
+                const user = stories.find(
+                  (s) => s.user._id === usersStories[viewingIndex].userId
+                );
+                if (!user) return null;
+
+                const allMediaWithTime = user.story.flatMap((s) =>
+                  s.media.map((url) => ({
+                    url,
+                    createdAt: s.createdAt,
+                  }))
+                );
+
+                const currentMedia =
+                  usersStories[viewingIndex].stories[currentIdx];
+                const matched = allMediaWithTime.find(
+                  (m) => m.url === currentMedia
+                );
+
+                {
+                  /* <FormattedDate dateString={matched.createdAt} fallback="unknown" /> */
+                }
+                return matched?.createdAt ? (
+                  <span>{getRelativeTime(matched?.createdAt)}</span>
+                ) : null;
+              })()}
+            </div>
+
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 setViewingIndex(null);
               }}
-              className="mt-4 px-4 py-2  text-white rounded-full bg-['#00000085'] text-2xl cursor-pointer"
-              style={{
-                position: "absolute",
-                top: "3rem",
-                right: 0,
-                zIndex: 10,
-              }}
+              className="mt-4 px-4 py-2 text-white rounded-full text-2xl absolute top-2 right-4"
             >
-              x
+              ×
             </button>
           </div>
 
-          {/* Story image */}
-          <img
-            src={usersStories[viewingIndex].stories[currentIdx]}
-            alt={`story-${currentIdx}`}
-            className="w-90 h-[70%] object-cover rounded-lg shadow-lg"
-          />
+          {/* Story Content with CreatedAt Timestamp */}
+          <div className="relative h-[80vh] top-[2.5rem]">
+            {/* Story Media */}
+            <img
+              src={usersStories[viewingIndex].stories[currentIdx]}
+              alt={`story-${currentIdx}`}
+              className="w-90  object-cover rounded-lg shadow-lg"
+            />
+          </div>
         </div>
       )}
     </div>

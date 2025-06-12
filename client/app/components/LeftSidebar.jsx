@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useAuthenticated from "@/hooks/useAuthenticated";
 import avatar from "../../public/assets/dummy.png";
+import { InView, useInView } from "react-intersection-observer";
 import cover from "../../public/assets/coverBg.jpg";
 const LeftSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +20,12 @@ const LeftSidebar = () => {
       setLocalData(data);
     }
   }, []);
+  const LazyImage = () => {
+    const { ref, inView } = useInView({
+      triggerOnce: true,
+      threshold: 0.1,
+    });
+  };
 
   return (
     <>
@@ -56,13 +63,19 @@ const LeftSidebar = () => {
                 }}
               >
                 <div className="absolute bottom-[-30px] left-1/2 transform -translate-x-1/2">
-                  <Image
-                    src={localData?.result?.profileImage || avatar}
-                    alt="Avatar"
-                    className="rounded-full border-4 border-white shadow-lg"
-                    width={80}
-                    height={80}
-                  />
+                  {InView ? (
+                    <Image
+                      width={80}
+                      height={80}
+                      src={localData?.result?.profileImage || avatar}
+                      className="rounded-full border-4 border-white shadow-lg"
+                      alt="Lazy Loaded"
+                    />
+                  ) : (
+                    <div
+                      style={{ width: 80, height: 80, background: "#eee" }}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -94,14 +107,27 @@ const LeftSidebar = () => {
               onClick={() => navigate.push("/friends")}
               className="cursor-pointer flex items-center gap-2"
             >
-              <Image src={friends} alt="Friends" width={24} height={24} />
+              {InView ? (
+                <Image width={24} height={24} src={friends} alt="Lazy Loaded" />
+              ) : (
+                <div style={{ width: 200, height: 200, background: "#eee" }} />
+              )}
               Friends
             </span>
             <span
               onClick={() => navigate.push("/bookmark")}
               className="cursor-pointer flex items-center gap-2"
             >
-              <Image src={marketplace} alt="Bookmark" width={24} height={24} />
+              {InView ? (
+                <Image
+                  width={24}
+                  height={24}
+                  src={marketplace}
+                  alt="Lazy Loaded"
+                />
+              ) : (
+                <div style={{ width: 200, height: 200, background: "#eee" }} />
+              )}
               BookMark
             </span>
           </div>

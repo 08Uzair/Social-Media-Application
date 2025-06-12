@@ -55,71 +55,48 @@ const BookMarkPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex flex-col md:flex-row p-4 gap-6 max-w-7xl mx-auto">
-        {/* Sidebar */}
-        <aside className="w-full md:w-1/4 space-y-4 md:h-[calc(100vh-8rem)] md:sticky md:top-24">
-          <div className="bg-white p-4 rounded-xl shadow">
-            <h2 className="font-semibold text-xl md:text-lg mb-2">
-              Your Profile
-            </h2>
-            <Image
-              src={localData?.result?.profileImage || dummy} // Fallback to cover if no profile image is set
-              alt="Profile"
-              className="w-22 h-22 rounded-full border-4 border-gray-200 shadow-lg"
-              width={300}
-              height={300}
-            />
-            <p className="text-sm">
-              Name : {localData?.result?.firstName || ""}{" "}
-              {localData?.result?.surname || "John Doe"}
-            </p>
-            <p className="text-sm">Email : {localData?.result?.email || ""}</p>
-          </div>
-        </aside>
+    <>
+      {/* Main Feed */}
+      <main className="w-[55%]  space-y-4">
+        <div className="bg-white p-4 rounded-xl shadow text-center relative flex items-center justify-center">
+          <h1 className="text-2xl md:text-3xl font-bold">BOOKMARKS 🧾</h1>
+          <span className="w-8 h-8 rounded-full shadow absolute right-8 flex items-center justify-center text-center">{filteredData.length}</span>
+        </div>
 
-        {/* Main Feed */}
-        <main className="w-full md:w-3/4 space-y-4">
-          <div className="bg-white p-4 rounded-xl shadow text-center">
-            <h1 className="text-2xl md:text-3xl font-bold">BOOKMARKS 🧾</h1>
-          </div>
-
-          {/* Posts */}
-          {filteredData?.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white p-4 rounded-xl shadow space-y-2 cursor-pointer"
-            >
-              <div className="flex items-center gap-3 relative">
-                <div
-                  onClick={() => handleRemoveBookMark(item._id)}
-                  className="absolute right-0 cursor-pointer mt-[2rem]"
+        {/* Posts */}
+        {filteredData?.map((item, index) => (
+          <div
+            key={index}
+            className="bg-white p-4 rounded-xl shadow space-y-2 cursor-pointer"
+          >
+            <div className="flex items-center gap-3 relative">
+              <div
+                onClick={() => handleRemoveBookMark(item._id)}
+                className="absolute right-0 cursor-pointer mt-[2rem]"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  style={{ fill: "gray" }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    style={{ fill: "gray" }}
-                  >
-                    <path d="M18.5 2h-12C4.57 2 3 3.57 3 5.5V22l7-3.5 7 3.5v-9h5V5.5C22 3.57 20.43 2 18.5 2zM15 18.764l-5-2.5-5 2.5V5.5C5 4.673 5.673 4 6.5 4h8.852A3.451 3.451 0 0 0 15 5.5v13.264zM20 11h-3V5.5c0-.827.673-1.5 1.5-1.5s1.5.673 1.5 1.5V11z"></path>
-                    <path d="M7 9h6v2H7z"></path>
-                  </svg>
-                </div>
-              </div>
-              <div onClick={() => openModal(item?.post._id)}>
-                <p className="text-sm md:text-base">
-                  <span className="font-semibold text-sm ">TITLE :</span>{" "}
-                  {item?.post?.title}
-                </p>
-                <div className="text-xs text-gray-500">
-                  <FormattedDate dateString={item?.createdAt} />
-                </div>
+                  <path d="M18.5 2h-12C4.57 2 3 3.57 3 5.5V22l7-3.5 7 3.5v-9h5V5.5C22 3.57 20.43 2 18.5 2zM15 18.764l-5-2.5-5 2.5V5.5C5 4.673 5.673 4 6.5 4h8.852A3.451 3.451 0 0 0 15 5.5v13.264zM20 11h-3V5.5c0-.827.673-1.5 1.5-1.5s1.5.673 1.5 1.5V11z"></path>
+                  <path d="M7 9h6v2H7z"></path>
+                </svg>
               </div>
             </div>
-          ))}
-        </main>
-      </div>
+            <div onClick={() => openModal(item?.post._id)}>
+              <p className="font-semibold text-lg text-gray-800">
+                {item?.post?.title}
+              </p>
+              <div className="text-xs text-gray-500">
+                <FormattedDate dateString={item?.createdAt} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </main>
 
       {/* Modal */}
       {isModalOpen && (
@@ -166,7 +143,7 @@ const BookMarkPage = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

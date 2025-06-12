@@ -5,6 +5,7 @@ import {
   FETCH_USER_ID,
   FETCH_USER,
   UPDATE_USER,
+  LOGOUT,
 } from "../constants/actionType";
 
 export const signin = (newUser) => async (dispatch) => {
@@ -40,6 +41,13 @@ export const getUserByID = (id) => async (dispatch) => {
     const { data } = await api.getUserById(id);
     dispatch({ type: FETCH_USER_ID, payload: data });
     return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const logoutUser = () => async (dispatch) => {
+  try {
+    dispatch({ type: LOGOUT, payload: null });
   } catch (error) {
     console.log(error);
   }

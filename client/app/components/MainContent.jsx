@@ -1,11 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import upload from "../../public/assets/upload.png";
-import member1 from "../../public/assets/member-1.png";
-import member2 from "../../public/assets/member-2.png";
-import member3 from "../../public/assets/member-3.png";
-import member4 from "../../public/assets/member-4.png";
 import profile from "../../public/assets/profile-pic.png";
 import feed from "../../public/assets/feed-image-1.png";
 import profile1 from "../../public/assets/profile-pic.png";
@@ -28,29 +23,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import StoryMain from "./StoryMain";
 import Share from "./Share";
+import Link from "next/link";
 const MainContent = () => {
-  const storyData = [
-    {
-      image: upload,
-      title: "Post Story",
-    },
-    {
-      image: member1,
-      title: "Alison",
-    },
-    {
-      image: member2,
-      title: "Jackson",
-    },
-    {
-      image: member3,
-      title: "Samona",
-    },
-    {
-      image: member4,
-      title: "John Doe",
-    },
-  ];
   const [isModelOpen, setModelOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
@@ -63,17 +37,13 @@ const MainContent = () => {
   const posts = useSelector((state) => state.post.post.posts);
   const bookmark = useSelector((state) => state.bookmark.bookmark.marks);
   const users = useSelector((state) => state);
-  const baseUrl = window.location.href
+  const baseUrl = window.location.href;
   const { isAuthenticated } = useAuthenticated();
   const router = useRouter();
-  // console.log(posts, " This are post");
-  // console.log(bookmark, " This are bookmark");
-  // console.log(users, " This are Users");
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const data = await uploadImageToCloudinary(file);
-      // console.log(data);
       setImage(data);
     }
   };
@@ -170,8 +140,10 @@ const MainContent = () => {
 
               <div className="mb-4">
                 {image && (
-                  <img
+                  <Image
                     src={image}
+                    width={500}
+                    height={500}
                     alt="Preview"
                     className="mb-2 w-full rounded-md "
                   />
@@ -326,13 +298,15 @@ const MainContent = () => {
               </div>
             </div>
             <p className="post-text">{item?.title} </p>
-            <Image
-              src={item.image || feed}
-              width={800}
-              height={800}
-              alt=" feed"
-              className="post-Image"
-            />
+            <Link href={`/post/${item._id}`}>
+              <Image
+                src={item.image || feed}
+                width={800}
+                height={800}
+                alt=" feed"
+                className="post-Image"
+              />
+            </Link>
             <div className="post-row p-2">
               <div className="active-icons">
                 <div
@@ -384,8 +358,11 @@ const MainContent = () => {
                   45
                 </div>
                 <div>
-               <Share title={item.title} content={item.content} url={`${baseUrl}post/${item._id}`}/>
-                
+                  <Share
+                    title={item.title}
+                    content={item.content}
+                    url={`${baseUrl}post/${item._id}`}
+                  />
                 </div>
               </div>
               <div className="post-profile-icon">

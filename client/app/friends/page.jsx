@@ -23,15 +23,15 @@ const FollowTabs = () => {
     //  const token = req.cookies.get('token')?.value;
     //  console.log(token, "This is TOKEN From Cookies")
   }, []);
-  // const followersData = async () => {
-  //   if (mainUser?.followers?.length) {
-  //     const data = await getAllUsersByIds(mainUser.followers, dispatch);
-  //     // console.log(data, "These are followers");
-  //     if (data) {
-  //       setFollower(data);
-  //     }
-  //   }
-  // };
+  const followersData = async () => {
+    if (mainUser?.followers?.length) {
+      const data = await getAllUsersByIds(mainUser.followers, dispatch);
+      // console.log(data, "These are followers");
+      if (data) {
+        setFollower(data);
+      }
+    }
+  };
 
   const followingData = async () => {
     if (mainUser?.following?.length) {
@@ -51,14 +51,12 @@ const FollowTabs = () => {
   }, [localData?.result?._id]);
 
   useEffect(() => {
-    if (mainUser) {
-      // followersData();
-      followingData();
-    }
-  }, [mainUser]);
+    followingData();
+    followersData();
+  }, []);
 
   return (
-    <div className=" m-[2rem] mt-10 p-4 bg-white rounded-2xl shadow-lg">
+    <div className="w-[60%] m-[2rem] mt-10 p-4 bg-white rounded-2xl shadow-lg">
       {/* Tabs */}
       <div className="flex justify-between border-b border-gray-200 mb-4">
         <button
@@ -85,9 +83,9 @@ const FollowTabs = () => {
 
       {/* Content */}
       <div className="space-y-4">
-        {(activeTab === "followers" ? followers : following).map((user) => (
+        {(activeTab === "followers" ? followers : following).map((user,i) => (
           <div
-            key={user?.id}
+            key={i}
             className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg shadow-sm"
           >
             <img
