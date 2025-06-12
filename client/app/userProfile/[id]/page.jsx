@@ -1,18 +1,18 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import cat from "../../public/assets/cat.jpg";
-import plus from "../../public/assets/plus.png";
-import cover from "../../public/assets/coverBg.jpg";
-import dummy from "../../public/assets/dummy.png";
-import { uploadImageToCloudinary } from "../utility/uploadImage";
+import plus from "../../../public/assets/plus.png";
+import cover from "../../../public/assets/coverBg.jpg";
+import dummy from "../../../public/assets/dummy.png";
+
+import { uploadImageToCloudinary } from "../../utility/uploadImage";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserByID,
   mergeAndUpdateLocalUserData,
   updateUser,
-} from "../redux/actions/auth";
-import { createPost, getUserPost } from "../redux/actions/post";
+} from "../../redux/actions/auth";
+import { createPost, getUserPost } from "../../redux/actions/post";
 import { useParams } from "next/navigation";
 
 const UserProfileCard = () => {

@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect } from "react";
 import Image from "next/image";
-import advertisement from "../../public/assets/advertisement.png";
+import portfolio from "../../public/assets/portfolio.png";
 import member1 from "../../public/assets/member-1.png";
 import member2 from "../../public/assets/member-2.png";
 import member3 from "../../public/assets/member-3.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../redux/actions/auth";
+import Link from "next/link";
 const RightSidebar = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state);
@@ -50,14 +51,30 @@ const RightSidebar = () => {
       </div>
 
       <div className="sidebar-title">
-        <h4>Advertisement</h4>
-        <a href="#">Close</a>
+        <h4>Portfolio</h4>*
       </div>
-      <Image src={advertisement} className="sidebar-ads" alt="" />
+      <Link 
+      target="_blank"
+      href="https://uzerqureshi-portfolio.netlify.app/">
+        <div className="relative group w-fit shadow">
+          {/* The Image */}
+          <Image
+            width={500}
+            height={500}
+            src={portfolio}
+            alt="Portfolio"
+            className="sidebar-ads transition duration-300"
+          />
+
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition rounded-[10px] cursor-pointer duration-300 flex items-center justify-center">
+            🔗
+          </div>
+        </div>
+      </Link>
 
       <div className="sidebar-title">
-        <h4>Conversation</h4>
-        <a href="#">Hide Chat</a>
+        <h4>Conversation</h4>*
       </div>
 
       <div className="online-list">

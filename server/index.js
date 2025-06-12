@@ -20,7 +20,7 @@ app.use("/api/v1/bookmark", markRouter);
 app.use("/api/v1/story", storyRouter);
 
 cron.schedule("*/2 * * * *", async () => {
-  console.log("[CRON] Running hourly story cleanup...");
+  console.log("[CRON] Running 2 min story cleanup...");
   await cleanupOldStories();
 });
 
