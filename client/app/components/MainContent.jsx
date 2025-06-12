@@ -38,7 +38,6 @@ const MainContent = () => {
   const bookmark = useSelector((state) => state.bookmark.bookmark.marks);
   const users = useSelector((state) => state);
   const baseUrl = typeof window !== "undefined" ? window.location.href : "";
-
   const { isAuthenticated } = useAuthenticated();
   const router = useRouter();
   const handleImageUpload = async (e) => {
@@ -356,13 +355,12 @@ const MainContent = () => {
                   >
                     <path d="M20 2H4c-1.103 0-2 .897-2 2v18l5.333-4H20c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14H6.667L4 18V4h16v12z"></path>
                   </svg>
-                  45
                 </div>
                 <div>
                   <Share
                     title={item.title}
                     content={item.content}
-                    url={`${baseUrl}post/${item._id}`}
+                    url={`https://social-media-application-umber.vercel.app/post/${item._id}`}
                   />
                 </div>
               </div>

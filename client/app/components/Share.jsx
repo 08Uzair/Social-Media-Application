@@ -4,7 +4,7 @@ const Share = ({ title, content, url }) => {
   const handleShare = async (title, content, url) => {
     if (navigator.share) {
       try {
-        await navigator.share({
+      const data =  await navigator.share({
           title: title,
           text: content,
           url: url,

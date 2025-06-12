@@ -14,7 +14,7 @@ const LinkedInPost = () => {
   const [localData, setLocalData] = useState("");
   const postData = useSelector((state) => state.post.singlePost);
   const loading = useSelector((state) => state.post.loading);
-  const baseUrl = window.location.href;
+  // const baseUrl = window.location.href;
   useEffect(() => {
     if (id) dispatch(getPostById(id));
   }, [id]);
@@ -49,8 +49,10 @@ const LinkedInPost = () => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-      {loading || !postData ? (
-        <div className="p-6 text-center text-gray-500">Loading post...</div>
+      {!postData ? (
+        <div className="p-6 text-center text-gray-500 w-full h-screen ">
+          <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        </div>
       ) : (
         <>
           {/* Post Header */}
@@ -133,13 +135,12 @@ const LinkedInPost = () => {
                 >
                   <path d="M20 2H4c-1.103 0-2 .897-2 2v18l5.333-4H20c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14H6.667L4 18V4h16v12z"></path>
                 </svg>
-                45
               </div>
               <div>
                 <Share
                   title={postData?.title}
                   content={postData?.content}
-                  url={`${baseUrl}post/${id}`}
+                  url={`https://social-media-application-umber.vercel.app/post/${id}`}
                 />
               </div>
             </div>
