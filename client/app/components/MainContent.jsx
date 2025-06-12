@@ -37,7 +37,8 @@ const MainContent = () => {
   const posts = useSelector((state) => state.post.post.posts);
   const bookmark = useSelector((state) => state.bookmark.bookmark.marks);
   const users = useSelector((state) => state);
-  const baseUrl = window.location.href;
+  const baseUrl = typeof window !== "undefined" ? window.location.href : "";
+
   const { isAuthenticated } = useAuthenticated();
   const router = useRouter();
   const handleImageUpload = async (e) => {
