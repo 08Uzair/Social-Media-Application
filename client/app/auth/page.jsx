@@ -20,7 +20,7 @@ const FacebookAuth = () => {
     if (isSubmitting) {
       timer = setInterval(() => {
         setBtnStage((prev) => (prev + 1) % btnStages.length);
-      }, 1000);
+      }, 2500);
     }
     return () => clearInterval(timer);
   }, [isSubmitting]);

@@ -299,13 +299,21 @@ const MainContent = () => {
             </div>
             <p className="post-text">{item?.title} </p>
             <Link href={`/post/${item._id}`}>
-              <Image
+              <div className="bg-gray-100 rounded-lg overflow-hidden p-2 mb-4 flex items-center justify-start">
+                <img
+                  src={item.image || feed}
+                  alt="Post"
+                  className="w-full max-h-[400px] object-contain"
+                  loading="lazy"
+                />
+              </div>
+              {/* <Image
                 src={item.image || feed}
                 width={800}
-                height={800}
+                height={200}
                 alt=" feed"
-                className="post-Image"
-              />
+                className="post-Image h-[50vh] w-full object-cover "
+              /> */}
             </Link>
             <div className="post-row p-2">
               <div className="active-icons">

@@ -57,7 +57,7 @@ const BookMarkPage = () => {
   return (
     <>
       {/* Main Feed */}
-      <main className="w-[55%] sm:w-[85%] space-y-4">
+      <main className="w-[55%] space-y-4">
         <div className="bg-white p-4 rounded-xl shadow text-center relative flex items-center justify-center">
           <h1 className="text-2xl md:text-3xl font-bold">BOOKMARKS 🧾</h1>
           <span className="w-8 h-8 rounded-full shadow absolute right-8 flex items-center justify-center text-center">{filteredData.length}</span>
