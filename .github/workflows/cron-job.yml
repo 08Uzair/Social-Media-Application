@@ -1,0 +1,13 @@
+name: Scheduled Task
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  run-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Render App API
+        run: curl -X GET https://social-media-application-3alv.onrender.com/api/v1/post
