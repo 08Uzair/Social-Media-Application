@@ -1,6 +1,6 @@
 # 📱 Social Media Application
 
-A Full-Featured Full-Stack **Social Media Web App** where users can sign up, create posts & stories, follow others, like, share, bookmark content, and more — built with **Next.js**, **Node.js**, **Express**, **MongoDB**, and **Tailwind CSS**.
+A Featured Full-Stack **Social Media Web App** where users can sign up, create posts & stories, follow others, like, share, bookmark content, and more — built with **Next.js**, **Node.js**, **Express**, **MongoDB**, and **Tailwind CSS**.
 
 🔗 **Client Hosted on Versel**: [social-media-application-umber.vercel.app](https://social-media-application-umber.vercel.app)  
 🔗 **Server Hosted on Render**: [https://social-media-application-3alv.onrender.com](https://social-media-application-3alv.onrender.com)
