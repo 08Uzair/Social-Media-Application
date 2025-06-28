@@ -1,5 +1,27 @@
 # 📱 Social Media Application
+---
 
+ Authentication Page
+ * SIGN IN
+> ![image](https://github.com/user-attachments/assets/ddd9d62e-ae9b-45cb-934a-2b0193a964e4)
+
+ * SIGN UP / REGISTER
+> ![image](https://github.com/user-attachments/assets/99be1970-e183-4b08-a47b-5bd0138875a6)
+
+ * Home Page
+> ![image](https://github.com/user-attachments/assets/79b8aeda-d4b2-4166-a3a1-27182be0347d)
+
+ * Profile Page
+> ![image](https://github.com/user-attachments/assets/be66a018-a810-4f33-81c0-208a176f878b)
+
+ * Friends Page
+> ![image](https://github.com/user-attachments/assets/f019ca56-8a9a-4e9f-a417-8d90b5c97e60)
+
+ * Bookmark Page 
+> ![image](https://github.com/user-attachments/assets/493f018f-78e4-4d42-a558-7bb28c240070)
+
+>
+---
 A Featured Full-Stack **Social Media Web App** where users can sign up, create posts & stories, follow others, like, share, bookmark content, and more — built with **Next.js**, **Node.js**, **Express**, **MongoDB**, and **Tailwind CSS**.
 
 🔗 **Client Hosted on Versel**: [social-media-application-umber.vercel.app](https://social-media-application-umber.vercel.app)  
@@ -30,30 +52,6 @@ A Featured Full-Stack **Social Media Web App** where users can sign up, create p
 - **Media Storage**: Cloudinary
 
 ---
-
-## 📸 Screenshots
-
- Authentication Page
- * SIGN IN
-> ![image](https://github.com/user-attachments/assets/ddd9d62e-ae9b-45cb-934a-2b0193a964e4)
-
- * SIGN UP / REGISTER
-> ![image](https://github.com/user-attachments/assets/99be1970-e183-4b08-a47b-5bd0138875a6)
-
- * Home Page
-> ![image](https://github.com/user-attachments/assets/79b8aeda-d4b2-4166-a3a1-27182be0347d)
-
- * Profile Page
-> ![image](https://github.com/user-attachments/assets/be66a018-a810-4f33-81c0-208a176f878b)
-
- * Friends Page
-> ![image](https://github.com/user-attachments/assets/f019ca56-8a9a-4e9f-a417-8d90b5c97e60)
-
- * Bookmark Page 
-> ![image](https://github.com/user-attachments/assets/493f018f-78e4-4d42-a558-7bb28c240070)
-
->
-
 
 ## 🚀 Getting Started
 
