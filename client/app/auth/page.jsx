@@ -13,7 +13,17 @@ const FacebookAuth = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   // Button text stages
-  const btnStages = ["Logging in...", "Just 5 sec", "You're almost there"];
+  const btnStages = [
+    "Logging in...",
+    "Just 5 sec",
+    "You're almost there",
+    "Almost done...",
+    "Verifying credentials...",
+    "Setting things up...",
+    "Securing your account...",
+    "Just a moment more...",
+    "Getting things ready...",
+  ];
 
   useEffect(() => {
     let timer;

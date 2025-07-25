@@ -1,7 +1,7 @@
+import dynamic from "next/dynamic.js";
 import React from "react";
 
-import MainContent from "./MainContent";
-
+const MainContent = dynamic(() => import("./MainContent.jsx"));
 
 const Dashboard = () => {
   return (

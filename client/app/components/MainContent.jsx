@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import profile from "../../public/assets/profile-pic.png";
 import feed from "../../public/assets/feed-image-1.png";
@@ -17,12 +18,12 @@ import {
 import FormattedDate from "../utility/formattedDate";
 import { addBookMark, getBookMark } from "../redux/actions/bookMark";
 import { getUserByID } from "../redux/actions/auth";
-import BottomPopup from "./BottomPopup";
+const BottomPopup = dynamic(() => import("./BottomPopup.jsx"));
 import useAuthenticated from "@/hooks/useAuthenticated";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import StoryMain from "./StoryMain";
-import Share from "./Share";
+const StoryMain = dynamic(() => import("./StoryMain.jsx"));
+const Share = dynamic(() => import("./Share.jsx"));
 import Link from "next/link";
 const MainContent = () => {
   const [isModelOpen, setModelOpen] = useState(false);
@@ -230,7 +231,7 @@ const MainContent = () => {
       </div>
       {posts?.map((item, index) => {
         return (
-          <div key={index} className="post-container">
+          <div key={index} className="post-container shadow">
             <div className="post-row">
               <div className="user-profile">
                 <Image

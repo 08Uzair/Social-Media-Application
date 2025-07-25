@@ -7,12 +7,14 @@ import {
   UPDATE_USER,
   LOGOUT,
 } from "../constants/actionType";
+import { toast } from "react-toastify";
 
 export const signin = (newUser) => async (dispatch) => {
   try {
     const { data } = await api.signIn(newUser);
     dispatch({ type: AUTH, payload: data });
   } catch (error) {
+    toast.err("Invalid Email or Password");
     console.log(error);
   }
 };
