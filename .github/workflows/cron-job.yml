@@ -10,4 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call Render App API
-        run: curl -X GET https://social-media-server-8b2i.onrender.com/api/v1/post
+        # run: curl -X GET https://social-media-server-8b2i.onrender.com/api/v1/post
+        run: curl -X GET https://dummy.com
