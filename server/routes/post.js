@@ -14,5 +14,8 @@ postRouter.get("/", getPost);
 postRouter.get("/:id", getPostById);
 postRouter.delete("/:id", deletePost);
 postRouter.put("/:id", updatePost);
+
+
+
 // postRouter.put("/:id/like", likePost);
 // router.put("/posts/:postId/like", toggleLikePost);
